@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  college   String
+  role      String   @default("student") // student or committee
+  createdAt DateTime @default(now())
+
+  // committee profile (only if role is committee)
+  committeePage CommitteePage?
+
+  // activity
+  likes     Like[]
+  comments  Comment[]
+  rsvps     RSVP[]
+  reactions StoryReaction[]
+}
+
+model CommitteePage {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  name        String
+  bio         String?
+  profilePic  String?
+  college     String
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  posts    Post[]
+  stories  Story[]
+  updates  Update[]
+}
+
+model Post {
+  id          String   @id @default(uuid())
+  committeeId String
+  committee   CommitteePage @relation(fields: [committeeId], references: [id])
+  image       String
+  caption     String?
+  link        String?
+  isEvent     Boolean  @default(false)
+
+  // event fields
+  eventDate   DateTime?
+  eventTime   String?
+  venue       String?
+  category    String?
+
+  createdAt   DateTime @default(now())
+
+  likes    Like[]
+  comments Comment[]
+  rsvps    RSVP[]
+}
+
+model Story {
+  id          String   @id @default(uuid())
+  committeeId String
+  committee   CommitteePage @relation(fields: [committeeId], references: [id])
+  image       String
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  reactions StoryReaction[]
+  views     StoryView[]
+}
+
+model StoryReaction {
+  id       String @id @default(uuid())
+  storyId  String
+  story    Story  @relation(fields: [storyId], references: [id])
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  emoji    String
+}
+
+model StoryView {
+  id        String   @id @default(uuid())
+  storyId   String
+  story     Story    @relation(fields: [storyId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+}
+
+model Update {
+  id          String   @id @default(uuid())
+  committeeId String
+  committee   CommitteePage @relation(fields: [committeeId], references: [id])
+  text        String
+  link        String?
+  createdAt   DateTime @default(now())
+}
+
+model Like {
+  id     String @id @default(uuid())
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  text      String
+  parentId  String?
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+  createdAt DateTime @default(now())
+}
+
+model RSVP {
+  id     String @id @default(uuid())
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  text      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model CommitteeRequest {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  college   String
+  reason    String?
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+}
