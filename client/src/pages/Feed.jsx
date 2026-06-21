@@ -1,81 +1,113 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Navbar from "../components/layout/Navbar";
+import PostCard from "../components/ui/PostCard";
 
 function Feed() {
-  const { user, logout } = useAuth();
+  const { user, token, loading } = useAuth();
   const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
-    if (!user) navigate("/login");
-  }, [user]);
+    if (!loading && !user) navigate("/login");
+  }, [user, loading]);
+
+  useEffect(() => {
+    if (user && token) fetchPosts();
+  }, [user, token]);
+
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/posts/feed", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setPosts(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  const handleLike = async (postId) => {
+    await fetch(`http://localhost:5000/api/posts/${postId}/like`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    fetchPosts();
+  };
+
+  const handleComment = async (postId, text, parentId) => {
+    await fetch(`http://localhost:5000/api/posts/${postId}/comment`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text, parentId }),
+    });
+    fetchPosts();
+  };
+
+  const handleRSVP = async (postId) => {
+    await fetch(`http://localhost:5000/api/posts/${postId}/rsvp`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    fetchPosts();
+  };
+
+  if (loading) return null;
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "var(--bg-primary)",
-        padding: "2rem",
-      }}
-    >
-      <div style={{ maxWidth: "600px", margin: "0 auto" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "2rem",
-          }}
-        >
-          <h1
+    <div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
+      <Navbar />
+      <div
+        style={{
+          maxWidth: "600px",
+          margin: "0 auto",
+          padding: "80px 1rem 2rem",
+        }}
+      >
+        {fetching ? (
+          <div
             style={{
-              fontSize: "1.5rem",
-              fontWeight: "800",
-              background: "linear-gradient(135deg, #D174D2, #E0563F)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
+              textAlign: "center",
+              padding: "4rem 0",
+              color: "var(--text-muted)",
             }}
           >
-            Nexus
-          </h1>
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <span style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>
-              Hi, {user?.name}
-            </span>
-            <button
-              onClick={() => {
-                logout();
-                navigate("/");
-              }}
-              style={{
-                padding: "0.4rem 1rem",
-                borderRadius: "20px",
-                border: "1px solid rgba(255,255,255,0.15)",
-                background: "transparent",
-                color: "var(--text-muted)",
-                cursor: "pointer",
-                fontSize: "0.85rem",
-              }}
-            >
-              Logout
-            </button>
+            Loading...
           </div>
-        </div>
-
-        <div
-          style={{
-            textAlign: "center",
-            padding: "4rem 0",
-            color: "var(--text-muted)",
-          }}
-        >
-          <p style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>
-            Feed coming soon
-          </p>
-          <p style={{ fontSize: "0.9rem" }}>
-            Posts from all committees will appear here
-          </p>
-        </div>
+        ) : posts.length === 0 ? (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "4rem 0",
+              color: "var(--text-muted)",
+            }}
+          >
+            <p style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>
+              No posts yet
+            </p>
+            <p style={{ fontSize: "0.9rem" }}>
+              Committees haven't posted anything yet
+            </p>
+          </div>
+        ) : (
+          posts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              onLike={handleLike}
+              onComment={handleComment}
+              onRSVP={handleRSVP}
+            />
+          ))
+        )}
       </div>
     </div>
   );
