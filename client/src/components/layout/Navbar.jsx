@@ -25,7 +25,7 @@ function Navbar() {
         left: 0,
         right: 0,
         zIndex: 100,
-        background: "rgba(26, 16, 37, 0.85)",
+        background: "rgba(30, 15, 45, 0.6)",
         backdropFilter: "blur(20px)",
         borderBottom: "1px solid rgba(255,255,255,0.06)",
         padding: "0 2rem",

@@ -3,12 +3,12 @@
 :root {
   --bg-primary: #1a1025;
   --bg-surface: #2a1f35;
-  --bg-card: #231830;
+  --bg-card: rgba(255, 255, 255, 0.05);
   --accent-pink: #d174d2;
   --accent-coral: #e0563f;
   --text-primary: #ffffff;
-  --text-muted: #9b8bae;
-  --border: rgba(255, 255, 255, 0.08);
+  --text-muted: #c4aedd;
+  --border: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -18,8 +18,15 @@
 }
 
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background: linear-gradient(
+    160deg,
+    #3f567f 0%,
+    #7b3fa0 30%,
+    #c25080 60%,
+    #e0563f 100%
+  );
+  background-attachment: fixed;
+  color: #ffffff;
   font-family: "Inter", sans-serif;
   min-height: 100vh;
 }
@@ -29,10 +36,10 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-pink);
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 2px;
 }
