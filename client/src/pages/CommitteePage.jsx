@@ -1,7 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import Navbar from "../components/layout/Navbar";
 import PostCard from "../components/ui/PostCard";
 
@@ -63,10 +62,22 @@ function CommitteePage() {
     fetchCommittee();
   };
 
-  const viewStory = async (storyId) => {
-    await fetch(`http://localhost:5000/api/stories/${storyId}/view`, {
+  const viewStory = async (story) => {
+    setActiveStory(story);
+    await fetch(`http://localhost:5000/api/stories/${story.id}/view`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
+    });
+  };
+
+  const reactToStory = async (emoji) => {
+    await fetch(`http://localhost:5000/api/stories/${activeStory.id}/react`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ emoji }),
     });
   };
 
@@ -77,7 +88,6 @@ function CommitteePage() {
       <div
         style={{
           minHeight: "100vh",
-          background: "var(--bg-primary)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -91,33 +101,93 @@ function CommitteePage() {
     committee.stories?.filter((s) => new Date(s.expiresAt) > new Date()) || [];
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
+    <div style={{ minHeight: "100vh" }}>
       <Navbar />
 
       {/* story viewer */}
       {activeStory && (
         <div
-          onClick={() => setActiveStory(null)}
           style={{
             position: "fixed",
             inset: 0,
             background: "rgba(0,0,0,0.95)",
             zIndex: 200,
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
+          <div
+            onClick={() => setActiveStory(null)}
+            style={{
+              position: "absolute",
+              top: "1.5rem",
+              right: "1.5rem",
+              cursor: "pointer",
+              fontSize: "1.5rem",
+              color: "#fff",
+            }}
+          >
+            ✕
+          </div>
+
           <img
             src={activeStory.image}
             alt=""
             style={{
-              maxHeight: "90vh",
+              maxHeight: "75vh",
               maxWidth: "90vw",
               objectFit: "contain",
               borderRadius: "12px",
             }}
           />
+
+          {/* reactions */}
+          <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
+            {["❤️", "🔥", "👏", "😮", "🎉"].map((emoji) => (
+              <button
+                key={emoji}
+                onClick={() => reactToStory(emoji)}
+                style={{
+                  fontSize: "1.8rem",
+                  background: "rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  borderRadius: "50%",
+                  width: "52px",
+                  height: "52px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {emoji}
+              </button>
+            ))}
+          </div>
+
+          {/* story navigation dots */}
+          {activeStories.length > 1 && (
+            <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+              {activeStories.map((s) => (
+                <div
+                  key={s.id}
+                  onClick={() => viewStory(s)}
+                  style={{
+                    width: "8px",
+                    height: "8px",
+                    borderRadius: "50%",
+                    background:
+                      s.id === activeStory.id
+                        ? "#fff"
+                        : "rgba(255,255,255,0.3)",
+                    cursor: "pointer",
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -141,7 +211,7 @@ function CommitteePage() {
             {/* profile pic with story ring */}
             <div
               onClick={() =>
-                activeStories.length > 0 && setActiveStory(activeStories[0])
+                activeStories.length > 0 && viewStory(activeStories[0])
               }
               style={{
                 width: "80px",
@@ -164,7 +234,7 @@ function CommitteePage() {
                   background: "linear-gradient(135deg, #D174D2, #E0563F)",
                   border:
                     activeStories.length > 0
-                      ? "2px solid var(--bg-primary)"
+                      ? "2px solid rgba(0,0,0,0.5)"
                       : "none",
                   display: "flex",
                   alignItems: "center",
@@ -238,7 +308,7 @@ function CommitteePage() {
                   <div
                     key={update.id}
                     style={{
-                      background: "var(--bg-card)",
+                      background: "rgba(255,255,255,0.07)",
                       border: "1px solid var(--border)",
                       borderRadius: "12px",
                       padding: "0.75rem 1rem",
