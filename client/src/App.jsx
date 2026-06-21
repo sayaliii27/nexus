@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import CreatePost from "./pages/CreatePost";
 import CreateStory from "./pages/CreateStory";
 import CreateUpdate from "./pages/CreateUpdate";
+import Notifications from "./pages/Notifications";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/create-story" element={<CreateStory />} />
         <Route path="/create-update" element={<CreateUpdate />} />
+        <Route path="/notifications" element={<Notifications />} />
       </Routes>
     </BrowserRouter>
   );

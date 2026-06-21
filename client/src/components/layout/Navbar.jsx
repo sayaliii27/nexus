@@ -1,10 +1,26 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useEffect, useState } from "react";
 
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
+  const [unread, setUnread] = useState(0);
+
+  useEffect(() => {
+    if (user && token) fetchUnread();
+  }, [user, token, location.pathname]);
+
+  const fetchUnread = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/notifications", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setUnread(data.filter((n) => !n.read).length);
+    } catch (err) {}
+  };
 
   const navItems =
     user?.role === "committee"
@@ -25,9 +41,9 @@ function Navbar() {
         left: 0,
         right: 0,
         zIndex: 100,
-        background: "rgba(30, 15, 45, 0.6)",
+        background: "rgba(20, 10, 35, 0.4)",
         backdropFilter: "blur(20px)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
         padding: "0 2rem",
         height: "60px",
         display: "flex",
@@ -57,19 +73,45 @@ function Navbar() {
             key={item.path}
             onClick={() => navigate(item.path)}
             style={{
-              color:
-                location.pathname === item.path
-                  ? "#D174D2"
-                  : "var(--text-muted)",
+              color: "#ffffff",
               cursor: "pointer",
               fontSize: "0.9rem",
               fontWeight: "500",
-              transition: "color 0.2s",
+              opacity: location.pathname === item.path ? 1 : 0.7,
+              transition: "opacity 0.2s",
             }}
           >
             {item.label}
           </span>
         ))}
+
+        {/* notification bell */}
+        <div
+          onClick={() => navigate("/notifications")}
+          style={{ position: "relative", cursor: "pointer" }}
+        >
+          <span style={{ fontSize: "1.2rem" }}>🔔</span>
+          {unread > 0 && (
+            <div
+              style={{
+                position: "absolute",
+                top: "-4px",
+                right: "-4px",
+                width: "16px",
+                height: "16px",
+                borderRadius: "50%",
+                background: "#E0563F",
+                fontSize: "0.6rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: "700",
+              }}
+            >
+              {unread}
+            </div>
+          )}
+        </div>
 
         <div
           onClick={() => {

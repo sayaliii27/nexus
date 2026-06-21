@@ -1,14 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #1a1025;
-  --bg-surface: #2a1f35;
-  --bg-card: rgba(255, 255, 255, 0.05);
   --accent-pink: #d174d2;
   --accent-coral: #e0563f;
   --text-primary: #ffffff;
-  --text-muted: #c4aedd;
-  --border: rgba(255, 255, 255, 0.1);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --border: rgba(255, 255, 255, 0.12);
+  --bg-card: rgba(255, 255, 255, 0.07);
 }
 
 * {
@@ -18,17 +16,17 @@
 }
 
 body {
+  min-height: 100vh;
   background: linear-gradient(
     160deg,
-    #3f567f 0%,
-    #7b3fa0 30%,
-    #c25080 60%,
-    #e0563f 100%
+    #2c3e6b 0%,
+    #6b2f8a 35%,
+    #b84070 65%,
+    #d45535 100%
   );
   background-attachment: fixed;
   color: #ffffff;
   font-family: "Inter", sans-serif;
-  min-height: 100vh;
 }
 
 ::-webkit-scrollbar {
