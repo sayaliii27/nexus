@@ -7,6 +7,8 @@ import Directory from "./pages/Directory";
 import CommitteePage from "./pages/CommitteePage";
 import Dashboard from "./pages/Dashboard";
 import CreatePost from "./pages/CreatePost";
+import CreateStory from "./pages/CreateStory";
+import CreateUpdate from "./pages/CreateUpdate";
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="/committee/:id" element={<CommitteePage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/create-post" element={<CreatePost />} />
+        <Route path="/create-story" element={<CreateStory />} />
+        <Route path="/create-update" element={<CreateUpdate />} />
       </Routes>
     </BrowserRouter>
   );
