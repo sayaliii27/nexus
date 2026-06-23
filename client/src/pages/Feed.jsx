@@ -20,7 +20,7 @@ function Feed() {
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/posts/feed", {
+      const res = await fetch("import.meta.env.VITE_API_URL/api/posts/feed", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -33,7 +33,7 @@ function Feed() {
   };
 
   const handleLike = async (postId) => {
-    await fetch(`http://localhost:5000/api/posts/${postId}/like`, {
+    await fetch(`import.meta.env.VITE_API_URL/api/posts/${postId}/like`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -41,7 +41,7 @@ function Feed() {
   };
 
   const handleComment = async (postId, text, parentId) => {
-    await fetch(`http://localhost:5000/api/posts/${postId}/comment`, {
+    await fetch(`import.meta.env.VITE_API_URL/api/posts/${postId}/comment`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -53,7 +53,7 @@ function Feed() {
   };
 
   const handleRSVP = async (postId) => {
-    await fetch(`http://localhost:5000/api/posts/${postId}/rsvp`, {
+    await fetch(`import.meta.env.VITE_API_URL/api/posts/${postId}/rsvp`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });

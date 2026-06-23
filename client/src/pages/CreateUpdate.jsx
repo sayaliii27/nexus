@@ -16,7 +16,7 @@ function CreateUpdate() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("http://localhost:5000/api/updates", {
+      const res = await fetch("import.meta.env.VITE_API_URL/api/updates", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

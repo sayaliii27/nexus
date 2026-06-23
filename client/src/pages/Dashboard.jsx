@@ -20,7 +20,7 @@ function Dashboard() {
   const fetchMyPage = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/committee/college/${user.college}`,
+        `import.meta.env.VITE_API_URL/api/committee/college/${user.college}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },

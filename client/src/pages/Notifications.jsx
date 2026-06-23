@@ -19,13 +19,13 @@ function Notifications() {
 
   const fetchNotifications = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/notifications", {
+      const res = await fetch("import.meta.env.VITE_API_URL/api/notifications", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
       setNotifications(data);
       // mark all as read
-      await fetch("http://localhost:5000/api/notifications/read", {
+      await fetch("import.meta.env.VITE_API_URL/api/notifications/read", {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
       });

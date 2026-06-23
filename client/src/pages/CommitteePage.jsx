@@ -22,7 +22,7 @@ function CommitteePage() {
 
   const fetchCommittee = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/committee/${id}`, {
+      const res = await fetch(`import.meta.env.VITE_API_URL/api/committee/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -35,7 +35,7 @@ function CommitteePage() {
   };
 
   const handleLike = async (postId) => {
-    await fetch(`http://localhost:5000/api/posts/${postId}/like`, {
+    await fetch(`import.meta.env.VITE_API_URL/api/posts/${postId}/like`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -43,7 +43,7 @@ function CommitteePage() {
   };
 
   const handleComment = async (postId, text, parentId) => {
-    await fetch(`http://localhost:5000/api/posts/${postId}/comment`, {
+    await fetch(`import.meta.env.VITE_API_URL/api/posts/${postId}/comment`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -55,7 +55,7 @@ function CommitteePage() {
   };
 
   const handleRSVP = async (postId) => {
-    await fetch(`http://localhost:5000/api/posts/${postId}/rsvp`, {
+    await fetch(`import.meta.env.VITE_API_URL/api/posts/${postId}/rsvp`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -64,14 +64,14 @@ function CommitteePage() {
 
   const viewStory = async (story) => {
     setActiveStory(story);
-    await fetch(`http://localhost:5000/api/stories/${story.id}/view`, {
+    await fetch(`import.meta.env.VITE_API_URL/api/stories/${story.id}/view`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });
   };
 
   const reactToStory = async (emoji) => {
-    await fetch(`http://localhost:5000/api/stories/${activeStory.id}/react`, {
+    await fetch(`import.meta.env.VITE_API_URL/api/stories/${activeStory.id}/react`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
