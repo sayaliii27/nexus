@@ -183,6 +183,34 @@ const deletePost = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+const getPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await prisma.post.findUnique({
+      where: { id },
+      include: {
+        committee: {
+          select: { id: true, name: true, profilePic: true, verified: true },
+        },
+        likes: true,
+        comments: {
+          where: { parentId: null },
+          include: {
+            user: { select: { id: true, name: true } },
+            replies: {
+              include: { user: { select: { id: true, name: true } } },
+            },
+          },
+        },
+        rsvps: true,
+      },
+    });
+    if (!post) return res.status(404).json({ message: "Post not found" });
+    res.json(post);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
 
 module.exports = {
   createPost,
@@ -192,4 +220,5 @@ module.exports = {
   rsvpPost,
   deleteComment,
   deletePost,
+  getPost,
 };
