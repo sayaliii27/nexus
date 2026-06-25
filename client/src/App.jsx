@@ -11,6 +11,7 @@ import CreateStory from "./pages/CreateStory";
 import CreateUpdate from "./pages/CreateUpdate";
 import Notifications from "./pages/Notifications";
 import RequestCommittee from "./pages/RequestCommittee";
+import Manage from "./pages/Manage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/create-update" element={<CreateUpdate />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/request-committee" element={<RequestCommittee />} />
+        <Route path="/manage" element={<Manage />} />
       </Routes>
     </BrowserRouter>
   );
