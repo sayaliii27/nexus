@@ -13,7 +13,12 @@ const prisma = require("./lib/prisma");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://nexus-orcin-nine.vercel.app", "http://localhost:5173"],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
@@ -27,7 +32,6 @@ app.get("/", (req, res) => {
   res.json({ message: "Nexus API running" });
 });
 
-// cron job — delete expired stories every hour
 cron.schedule("0 * * * *", async () => {
   try {
     const deleted = await prisma.story.deleteMany({
