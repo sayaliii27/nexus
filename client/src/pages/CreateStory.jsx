@@ -25,7 +25,7 @@ function CreateStory() {
       const formData = new FormData();
       formData.append("image", image);
 
-      const res = await fetch("import.meta.env.VITE_API_URL/api/stories", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/stories`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

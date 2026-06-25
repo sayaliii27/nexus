@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-function PostCard({ post, onLike, onComment, onRSVP }) {
+function PostCard({ post, onLike, onComment, onRSVP, onDelete }) {
   const { user, token } = useAuth();
   const navigate = useNavigate();
   const [showComments, setShowComments] = useState(false);
@@ -85,6 +85,21 @@ function PostCard({ post, onLike, onComment, onRSVP }) {
           >
             verified
           </span>
+        )}
+        {user?.role === "committee" && onDelete && (
+          <button
+            onClick={() => onDelete(post.id)}
+            style={{
+              background: "none",
+              border: "none",
+              color: "rgba(255,255,255,0.3)",
+              cursor: "pointer",
+              fontSize: "1rem",
+              padding: "0.2rem 0.5rem",
+            }}
+          >
+            🗑️
+          </button>
         )}
       </div>
 

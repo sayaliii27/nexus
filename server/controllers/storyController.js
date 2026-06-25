@@ -92,4 +92,35 @@ const reactToStory = async (req, res) => {
   }
 };
 
-module.exports = { createStory, getStoriesByCollege, viewStory, reactToStory };
+const deleteStory = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const committeePage = await prisma.committeePage.findUnique({
+      where: { userId: req.user.id },
+    });
+
+    const story = await prisma.story.findUnique({ where: { id } });
+    if (!story) return res.status(404).json({ message: "Story not found" });
+
+    if (story.committeeId !== committeePage?.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    await prisma.storyReaction.deleteMany({ where: { storyId: id } });
+    await prisma.storyView.deleteMany({ where: { storyId: id } });
+    await prisma.story.delete({ where: { id } });
+
+    res.json({ message: "Story deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+module.exports = {
+  createStory,
+  getStoriesByCollege,
+  viewStory,
+  reactToStory,
+  deleteStory,
+};

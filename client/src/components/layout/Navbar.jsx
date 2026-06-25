@@ -14,7 +14,7 @@ function Navbar() {
 
   const fetchUnread = async () => {
     try {
-      const res = await fetch("import.meta.env.VITE_API_URL/api/notifications", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/notifications`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();

@@ -9,6 +9,7 @@ const {
   commentPost,
   rsvpPost,
   deleteComment,
+  deletePost,
 } = require("../controllers/postController");
 
 router.post("/", auth, upload.single("image"), createPost);
@@ -17,5 +18,6 @@ router.post("/:id/like", auth, likePost);
 router.post("/:id/comment", auth, commentPost);
 router.post("/:id/rsvp", auth, rsvpPost);
 router.delete("/comment/:id", auth, deleteComment);
+router.delete("/:id", auth, deletePost);
 
 module.exports = router;

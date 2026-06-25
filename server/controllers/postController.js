@@ -157,6 +157,33 @@ const deleteComment = async (req, res) => {
   }
 };
 
+const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const committeePage = await prisma.committeePage.findUnique({
+      where: { userId: req.user.id },
+    });
+
+    const post = await prisma.post.findUnique({ where: { id } });
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    if (post.committeeId !== committeePage?.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // delete related records first
+    await prisma.like.deleteMany({ where: { postId: id } });
+    await prisma.rSVP.deleteMany({ where: { postId: id } });
+    await prisma.comment.deleteMany({ where: { postId: id } });
+    await prisma.post.delete({ where: { id } });
+
+    res.json({ message: "Post deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 module.exports = {
   createPost,
   getFeedPosts,
@@ -164,4 +191,5 @@ module.exports = {
   commentPost,
   rsvpPost,
   deleteComment,
+  deletePost,
 };

@@ -43,7 +43,7 @@ function CreatePost() {
         formData.append("category", form.category);
       }
 
-      const res = await fetch("import.meta.env.VITE_API_URL/api/posts", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/posts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

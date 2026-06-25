@@ -21,7 +21,7 @@ function Directory() {
   const fetchCommittees = async () => {
     try {
       const res = await fetch(
-        `import.meta.env.VITE_API_URL/api/committee/college/${user.college}`,
+        `${import.meta.env.VITE_API_URL}/api/committee/college/${user.college}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
