@@ -117,11 +117,36 @@ const getCommitteePage = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+const updateProfile = async (req, res) => {
+  try {
+    const { bio } = req.body;
+    const profilePic = req.file?.path;
 
+    const committeePage = await prisma.committeePage.findUnique({
+      where: { userId: req.user.id },
+    });
+
+    if (!committeePage)
+      return res.status(403).json({ message: "Not a committee" });
+
+    const updated = await prisma.committeePage.update({
+      where: { id: committeePage.id },
+      data: {
+        ...(bio !== undefined && { bio }),
+        ...(profilePic && { profilePic }),
+      },
+    });
+
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
 module.exports = {
   getPendingRequests,
   approveRequest,
   rejectRequest,
   getCommitteesByCollege,
   getCommitteePage,
+  updateProfile,
 };
