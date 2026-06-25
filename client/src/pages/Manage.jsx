@@ -64,29 +64,49 @@ function Manage() {
       <Navbar />
       <div
         style={{
-          maxWidth: "900px",
+          maxWidth: "700px",
           margin: "0 auto",
           padding: "80px 1rem 2rem",
         }}
       >
-        <h2
+        <div
           style={{
-            fontSize: "1.5rem",
-            fontWeight: "700",
-            marginBottom: "0.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "1.5rem",
           }}
         >
-          Manage
-        </h2>
-        <p
-          style={{
-            color: "var(--text-muted)",
-            marginBottom: "2rem",
-            fontSize: "0.9rem",
-          }}
-        >
-          {posts.length} posts
-        </p>
+          <div>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "700",
+                marginBottom: "0.25rem",
+              }}
+            >
+              Manage
+            </h2>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
+              {posts.length} posts
+            </p>
+          </div>
+          <button
+            onClick={() => navigate("/create-post")}
+            style={{
+              padding: "0.6rem 1.2rem",
+              borderRadius: "20px",
+              border: "none",
+              background: "linear-gradient(135deg, #D174D2, #E0563F)",
+              color: "#fff",
+              cursor: "pointer",
+              fontSize: "0.85rem",
+              fontWeight: "600",
+            }}
+          >
+            + New post
+          </button>
+        </div>
 
         {fetching ? (
           <div
@@ -124,90 +144,141 @@ function Manage() {
           </div>
         ) : (
           <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-              gap: "1rem",
-            }}
+            style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
           >
             {posts.map((post) => (
               <div
                 key={post.id}
                 style={{
-                  background: "rgba(255,255,255,0.07)",
+                  display: "flex",
+                  gap: "1rem",
+                  alignItems: "center",
+                  padding: "0.85rem 1rem",
+                  background: "rgba(255,255,255,0.06)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "16px",
-                  overflow: "hidden",
+                  borderRadius: "12px",
                 }}
               >
-                <img
-                  src={post.image}
-                  alt=""
-                  style={{ width: "100%", height: "180px", objectFit: "cover" }}
-                />
-                <div style={{ padding: "0.75rem 1rem" }}>
-                  {post.caption && (
-                    <p
-                      style={{
-                        fontSize: "0.85rem",
-                        marginBottom: "0.5rem",
-                        color: "var(--text-muted)",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {post.caption}
-                    </p>
-                  )}
-                  <div
+                {/* thumbnail */}
+                <div
+                  style={{
+                    width: "56px",
+                    height: "56px",
+                    borderRadius: "8px",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                  }}
+                >
+                  <img
+                    src={post.image}
+                    alt=""
                     style={{
-                      display: "flex",
-                      gap: "1rem",
-                      fontSize: "0.8rem",
-                      color: "var(--text-muted)",
-                      marginBottom: "0.75rem",
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+
+                {/* info */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p
+                    style={{
+                      fontSize: "0.85rem",
+                      marginBottom: "0.4rem",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      color: "#fff",
                     }}
                   >
-                    <span>❤️ {post.likes?.length || 0} likes</span>
-                    <span>💬 {post.comments?.length || 0} comments</span>
+                    {post.caption ||
+                      (post.isEvent ? "📅 Event post" : "No caption")}
+                  </p>
+                  <div
+                    style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "0.72rem",
+                        padding: "2px 8px",
+                        borderRadius: "20px",
+                        background: "rgba(209,116,210,0.15)",
+                        color: "#D174D2",
+                      }}
+                    >
+                      ❤️ {post.likes?.length || 0} likes
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "0.72rem",
+                        padding: "2px 8px",
+                        borderRadius: "20px",
+                        background: "rgba(63,86,127,0.3)",
+                        color: "#a0b4d6",
+                      }}
+                    >
+                      💬 {post.comments?.length || 0} comments
+                    </span>
                     {post.isEvent && (
-                      <span>🎟️ {post.rsvps?.length || 0} RSVPs</span>
+                      <span
+                        style={{
+                          fontSize: "0.72rem",
+                          padding: "2px 8px",
+                          borderRadius: "20px",
+                          background: "rgba(224,86,63,0.15)",
+                          color: "#E0563F",
+                        }}
+                      >
+                        🎟️ {post.rsvps?.length || 0} RSVPs
+                      </span>
+                    )}
+                    {post.isEvent && (
+                      <span
+                        style={{
+                          fontSize: "0.72rem",
+                          padding: "2px 8px",
+                          borderRadius: "20px",
+                          background: "rgba(255,255,255,0.08)",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        event
+                      </span>
                     )}
                   </div>
-                  <div style={{ display: "flex", gap: "0.5rem" }}>
-                    <button
-                      onClick={() =>
-                        navigate(`/committee/${committeePage?.id}`)
-                      }
-                      style={{
-                        flex: 1,
-                        padding: "0.5rem",
-                        borderRadius: "8px",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        background: "transparent",
-                        color: "#fff",
-                        cursor: "pointer",
-                        fontSize: "0.8rem",
-                      }}
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleDelete(post.id)}
-                      style={{
-                        padding: "0.5rem 0.75rem",
-                        borderRadius: "8px",
-                        border: "none",
-                        background: "rgba(224, 86, 63, 0.2)",
-                        color: "#E0563F",
-                        cursor: "pointer",
-                        fontSize: "0.8rem",
-                      }}
-                    >
-                      🗑️
-                    </button>
-                  </div>
+                </div>
+
+                {/* actions */}
+                <div style={{ display: "flex", gap: "0.75rem", flexShrink: 0 }}>
+                  <button
+                    onClick={() => navigate(`/post/${post.id}`)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "rgba(255,255,255,0.4)",
+                      cursor: "pointer",
+                      fontSize: "1.1rem",
+                      padding: "0.2rem",
+                    }}
+                    title="View"
+                  >
+                    👁️
+                  </button>
+                  <button
+                    onClick={() => handleDelete(post.id)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "rgba(224,86,63,0.7)",
+                      cursor: "pointer",
+                      fontSize: "1.1rem",
+                      padding: "0.2rem",
+                    }}
+                    title="Delete"
+                  >
+                    🗑️
+                  </button>
                 </div>
               </div>
             ))}
