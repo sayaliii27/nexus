@@ -18,28 +18,41 @@ function Login() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        },
+      );
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      login(data.token, data.user)
-if (data.user.role === 'committee') {
-  const res2 = await fetch(`${import.meta.env.VITE_API_URL}/api/committee/college/${data.user.college}`, {
-    headers: { Authorization: `Bearer ${data.token}` }
-  })
-  const committees = await res2.json()
-  const myPage = committees.find(c => c.userId === data.user.id)
-  if (myPage) {
-    navigate(`/committee/${myPage.id}`)
-  } else {
-    navigate('/dashboard')
-  }
-} else {
-  navigate('/feed')
-}
+      login(data.token, data.user);
+      if (data.user.role === "committee") {
+        const res2 = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/committee/college/${data.user.college}`,
+          {
+            headers: { Authorization: `Bearer ${data.token}` },
+          },
+        );
+        const committees = await res2.json();
+        const myPage = committees.find((c) => c.userId === data.user.id);
+        if (myPage) {
+          navigate(`/committee/${myPage.id}`);
+        } else {
+          navigate("/dashboard");
+        }
+      } else {
+        navigate("/feed");
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const inputStyle = {
     width: "100%",
     padding: "0.9rem 1.2rem",
@@ -56,7 +69,6 @@ if (data.user.role === 'committee') {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #412653 0%, #3F567F 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
