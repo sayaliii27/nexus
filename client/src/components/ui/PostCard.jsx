@@ -221,6 +221,26 @@ function PostCard({ post, onLike, onComment, onRSVP, onDelete }) {
         >
           💬 {post.comments?.length || 0}
         </button>
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(
+              `${window.location.origin}/post/${post.id}`,
+            );
+            alert("Link copied!");
+          }}
+          style={{
+            background: "none",
+            border: "none",
+            color: "var(--text-muted)",
+            cursor: "pointer",
+            fontSize: "0.9rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.4rem",
+          }}
+        >
+          🔗
+        </button>
 
         {post.isEvent && (
           <button
