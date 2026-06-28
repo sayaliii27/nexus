@@ -44,6 +44,16 @@ app.get("/", (req, res) => {
   res.json({ message: "Nexus API running" });
 });
 
+// keep database alive — ping every 4 minutes
+setInterval(
+  async () => {
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+    } catch (err) {}
+  },
+  4 * 60 * 1000,
+);
+
 cron.schedule("0 * * * *", async () => {
   try {
     const deleted = await prisma.story.deleteMany({
