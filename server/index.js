@@ -10,6 +10,7 @@ const storyRoutes = require("./routes/stories");
 const updateRoutes = require("./routes/updates");
 const notificationRoutes = require("./routes/notifications");
 const prisma = require("./lib/prisma");
+const bookmarkRoutes = require("./routes/bookmarks");
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/stories", storyRoutes);
 app.use("/api/updates", updateRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/bookmarks", bookmarkRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "Nexus API running" });

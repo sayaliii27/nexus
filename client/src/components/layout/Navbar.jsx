@@ -238,6 +238,18 @@ function Navbar() {
                 </div>
               )}
             </div>
+
+            <span
+              onClick={() => navigate("/bookmarks")}
+              style={{
+                color: "#fff",
+                cursor: "pointer",
+                fontSize: "1.2rem",
+                opacity: location.pathname === "/bookmarks" ? 1 : 0.7,
+              }}
+            >
+              🔖
+            </span>
           </>
         )}
 

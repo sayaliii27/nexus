@@ -65,6 +65,14 @@ function Feed() {
     });
     fetchPosts();
   };
+  const handleBookmark = async (postId) => {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/bookmarks/${postId}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    fetchPosts();
+  };
+
   const handleDelete = async (postId) => {
     if (!window.confirm("Delete this post?")) return;
     await fetch(`${import.meta.env.VITE_API_URL}/api/posts/${postId}`, {
@@ -227,6 +235,7 @@ function Feed() {
               onComment={handleComment}
               onRSVP={handleRSVP}
               onDelete={handleDelete}
+              onBookmark={handleBookmark}
             />
           ))
         )}

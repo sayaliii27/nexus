@@ -71,6 +71,7 @@ const getFeedPosts = async (req, res) => {
           },
         },
         rsvps: true,
+        bookmarks: true,
       },
       orderBy: { createdAt: "desc" },
     });

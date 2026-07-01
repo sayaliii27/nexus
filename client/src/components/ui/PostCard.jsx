@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-function PostCard({ post, onLike, onComment, onRSVP, onDelete }) {
+function PostCard({ post, onLike, onComment, onRSVP, onDelete, onBookmark }) {
   const { user, token } = useAuth();
   const navigate = useNavigate();
   const [showComments, setShowComments] = useState(false);
@@ -11,6 +11,7 @@ function PostCard({ post, onLike, onComment, onRSVP, onDelete }) {
 
   const isLiked = post.likes?.some((l) => l.userId === user?.id);
   const isRSVPed = post.rsvps?.some((r) => r.userId === user?.id);
+  const isBookmarked = post.bookmarks?.some((b) => b.userId === user?.id);
 
   const handleComment = async () => {
     if (!commentText.trim()) return;
@@ -240,6 +241,19 @@ function PostCard({ post, onLike, onComment, onRSVP, onDelete }) {
           }}
         >
           🔗
+        </button>
+        <button
+          onClick={() => onBookmark && onBookmark(post.id)}
+          style={{
+            marginLeft: "auto",
+            background: "none",
+            border: "none",
+            color: isBookmarked ? "#D174D2" : "var(--text-muted)",
+            cursor: "pointer",
+            fontSize: "0.9rem",
+          }}
+        >
+          {isBookmarked ? "🔖" : "🔖"}
         </button>
 
         {post.isEvent && (

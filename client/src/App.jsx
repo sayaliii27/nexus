@@ -13,6 +13,7 @@ import Notifications from "./pages/Notifications";
 import RequestCommittee from "./pages/RequestCommittee";
 import Manage from "./pages/Manage";
 import PostDetail from "./pages/PostDetail";
+import Bookmarks from "./pages/Bookmarks";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/request-committee" element={<RequestCommittee />} />
         <Route path="/manage" element={<Manage />} />
         <Route path="/post/:id" element={<PostDetail />} />;
+        <Route path="/bookmarks" element={<Bookmarks />} />
       </Routes>
     </BrowserRouter>
   );
