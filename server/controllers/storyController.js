@@ -23,6 +23,18 @@ const createStory = async (req, res) => {
   }
 };
 
+// notify all students
+const students = await prisma.user.findMany({
+  where: { college: committeePage.college, role: "student" },
+});
+
+await prisma.notification.createMany({
+  data: students.map((s) => ({
+    userId: s.id,
+    text: `${committeePage.name} posted a new story`,
+  })),
+});
+
 const getStoriesByCollege = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({ where: { id: req.user.id } });
