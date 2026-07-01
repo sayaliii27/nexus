@@ -17,23 +17,22 @@ const createStory = async (req, res) => {
       data: { committeeId: committeePage.id, image, expiresAt },
     });
 
+    const students = await prisma.user.findMany({
+      where: { college: committeePage.college, role: "student" },
+    });
+
+    await prisma.notification.createMany({
+      data: students.map((s) => ({
+        userId: s.id,
+        text: `${committeePage.name} posted a new story`,
+      })),
+    });
+
     res.status(201).json(story);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-
-// notify all students
-const students = await prisma.user.findMany({
-  where: { college: committeePage.college, role: "student" },
-});
-
-await prisma.notification.createMany({
-  data: students.map((s) => ({
-    userId: s.id,
-    text: `${committeePage.name} posted a new story`,
-  })),
-});
 
 const getStoriesByCollege = async (req, res) => {
   try {

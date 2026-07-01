@@ -14,27 +14,22 @@ const createUpdate = async (req, res) => {
       data: { committeeId: committeePage.id, text, link },
     });
 
+    const students = await prisma.user.findMany({
+      where: { college: committeePage.college, role: "student" },
+    });
+
+    await prisma.notification.createMany({
+      data: students.map((s) => ({
+        userId: s.id,
+        text: `${committeePage.name} posted a new update: "${text.substring(0, 50)}"`,
+      })),
+    });
+
     res.status(201).json(update);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-
-// notify all students
-const committeeFull = await prisma.committeePage.findUnique({
-  where: { id: committeePage.id },
-});
-
-const students = await prisma.user.findMany({
-  where: { college: committeeFull.college, role: "student" },
-});
-
-await prisma.notification.createMany({
-  data: students.map((s) => ({
-    userId: s.id,
-    text: `${committeePage.name} posted a new update: "${text.substring(0, 50)}"`,
-  })),
-});
 
 const getUpdates = async (req, res) => {
   try {
