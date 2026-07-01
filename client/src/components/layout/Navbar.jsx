@@ -212,6 +212,18 @@ function Navbar() {
             >
               Directory
             </span>
+            <span
+              onClick={() => navigate("/calendar")}
+              style={{
+                color: "#fff",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+                fontWeight: "500",
+                opacity: location.pathname === "/calendar" ? 1 : 0.7,
+              }}
+            >
+              Calendar
+            </span>
             <div
               onClick={() => navigate("/notifications")}
               style={{ position: "relative", cursor: "pointer" }}

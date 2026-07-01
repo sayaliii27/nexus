@@ -14,6 +14,7 @@ import RequestCommittee from "./pages/RequestCommittee";
 import Manage from "./pages/Manage";
 import PostDetail from "./pages/PostDetail";
 import Bookmarks from "./pages/Bookmarks";
+import EventCalendar from "./pages/EventCalendar";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/manage" element={<Manage />} />
         <Route path="/post/:id" element={<PostDetail />} />;
         <Route path="/bookmarks" element={<Bookmarks />} />
+        <Route path="/calendar" element={<EventCalendar />} />
       </Routes>
     </BrowserRouter>
   );
